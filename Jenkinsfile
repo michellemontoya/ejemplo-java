@@ -13,12 +13,26 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                script {
+                    try {
+                        sh 'mvn clean package'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+                }
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
+                script {
+                    try {
+                        sh 'mvn test'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+                }
             }
         }
     }
